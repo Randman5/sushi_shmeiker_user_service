@@ -3,3 +3,6 @@ spring:
 
 server:
   port: 8080
+
+site:
+  address: "https://sushimeiker.ru/"

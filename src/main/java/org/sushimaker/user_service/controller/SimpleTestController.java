@@ -1,39 +1,34 @@
 package org.sushimaker.user_service.controller;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.sushimaker.user_service.dto.menu.MenuCategory;
+import org.sushimaker.user_service.service.menu_parcer.MenuParser;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+@Slf4j
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
 public class SimpleTestController {
 
+    private final MenuParser parser;
+
     @GetMapping("/test")
-    private List<String> getTestText() {
-
+    public ResponseEntity<?> getTestText() {
+        log.info("GET /api/v1/test called");
         try {
-            Document doc = Jsoup.connect("https://sushimeiker.ru/").get();
-            Elements menu = Objects.requireNonNull(doc.getElementsByClass("small_menu").first()).getElementsByTag("a");
-            ArrayList<String> list = new ArrayList<>(3);
-            for (Element menuLink : menu) {
-                String href = menuLink.attr("href");
-                String text = menuLink.text();
-                list.add(text + "-" + href);
-            }
-            return list;
-        } catch (IOException ex) {
-            return List.of("parsing error");
+            List<MenuCategory> menu = parser.parseMenu();
+            return new ResponseEntity<>(menu, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Error: ", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-//        return "test text просто тестовый текст";
     }
 }
