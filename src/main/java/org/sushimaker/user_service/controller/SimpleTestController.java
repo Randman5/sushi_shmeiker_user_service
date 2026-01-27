@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.sushimaker.user_service.dto.menu.MenuCategory;
+import org.sushimaker.user_service.dto.menu.MenuItem;
 import org.sushimaker.user_service.service.menu_parcer.MenuParser;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -24,7 +26,7 @@ public class SimpleTestController {
     public ResponseEntity<?> getTestText() {
         log.info("GET /api/v1/test called");
         try {
-            List<MenuCategory> menu = parser.parseMenu();
+            HashMap<MenuCategory, List<MenuItem>> menu = parser.parseMenu();
             return new ResponseEntity<>(menu, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error: ", e);
