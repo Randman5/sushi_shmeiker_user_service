@@ -42,7 +42,7 @@ public class MenuParserImpl implements MenuParser {
     private void processCategory(MenuCategory category, HashMap<MenuCategory, List<MenuItem>> menu) {
         try {
             Document doc = fetchDocument(category.href());
-            Elements menuItems = doc.select(".catalog_pl.cpl_opener_right.cpl_opener_bottom");
+            Elements menuItems = doc.select("main .catalog_pl.cpl_opener_right.cpl_opener_bottom");
 
             List<MenuItem> itemsOfCategory = menuItems.stream()
                     .map(this::convertToMenuItem)
